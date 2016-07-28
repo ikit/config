@@ -1,4 +1,6 @@
-# Configuration de base avec SaltStack 
+# Configuration de base avec SaltStack  
+([Merci Oodnadatta](https://github.com/Oodnadatta/salt-conf))
+
 
 La configuration de SaltStack se trouve dans `/srv/salt`
 
@@ -41,13 +43,18 @@ sudo salt-call --local state.sls nom_du_fichier
 # Securisation du server
 
 Pour les expliquations en détails : [c'est là]( https://openclassrooms.com/courses/securiser-son-serveur-linux)
-
-
+Mais en gros à minima, il faut penser à faire :
+* Maj de la politique du firewall (tout interdir sauf...)
+* Changer le port par défaut pour se connecter via ssh
+* Modifier le fichier conf ssh : /etc/ssh/sshd_config
+  * changer le port (le même que dans iptables)
+  * interdir les authent en root
+  * interdir les authent sans mot de passe
 
 
 
 
 # Installation des services avec docker
-
-
-Merci Oodnadatta
+* Suivre la doc de docker en fonction de la distrib
+* Créer un répertoire (root) /docker à la racine où seront déployé tout les containers
+* 
