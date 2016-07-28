@@ -38,5 +38,16 @@ sudo salt-call --local state.sls nom_du_fichier
 ```
 
 
+# Securisation du server
 
-Merci Oodnadatta & Arkanosis
+Pour les expliquations en détails : [c'est là]( https://openclassrooms.com/courses/securiser-son-serveur-linux)
+
+
+
+
+
+
+# Installation des services avec docker
+
+
+Merci Oodnadatta
