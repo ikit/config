@@ -2,8 +2,50 @@
 # coding: utf-8 
 
 
-# script to run on debian 8
+# =====================================
+# TODO Test if operating system is debian. otherwise : abord
 
+
+
+# =====================================
+# Passwords that will be used by servers 
+# - all password that are set with "pwd" value will be generated automaticaly via random.org.
+# - you can put your own passwords if you want. You just need to replace "pwd" by your own values
+
+PWD_DOCKER_CLOUD_MYSQL_ROOT="pwd"
+PWD_DOCKER_CLOUD_MYSQL_USER="pwd"
+PWD_DOCKER_GIT_POSTGRES_ROOT="pwd"
+PWD_DOCKER_GIT_POSTGRES_USER="pwd"
+PWD_DOCKER_ABSG_MYSQL_ROOT="pwd"
+PWD_DOCKER_ABSG_MYSQL_USER="pwd"
+
+curl "https://www.random.org/passwords/?num=10&len=15&format=plain" > pwds
+
+if [ $PWD_DOCKER_CLOUD_MYSQL_ROOT = "pwd" ]; then
+	PWD_DOCKER_CLOUD_MYSQL_ROOT=`sed '1q;d' pwds`
+fi
+if [ $PWD_DOCKER_CLOUD_MYSQL_USER = "pwd" ]; then
+	PWD_DOCKER_CLOUD_MYSQL_USER=`sed '2q;d' pwds`
+fi
+
+if [ $PWD_DOCKER_GIT_POSTGRES_ROOT = "pwd" ]; then
+	PWD_DOCKER_GIT_POSTGRES_ROOT=`sed '3q;d' pwds`
+fi
+if [ $PWD_DOCKER_GIT_POSTGRES_USER = "pwd" ]; then
+	PWD_DOCKER_GIT_POSTGRES_USER=`sed '4q;d' pwds`
+fi
+
+if [ $PWD_DOCKER_ABSG_MYSQL_ROOT = "pwd" ]; then
+	PWD_DOCKER_ABSG_MYSQL_ROOT=`sed '5q;d' pwds`
+fi
+if [ $PWD_DOCKER_ABSG_MYSQL_ROOT = "pwd" ]; then
+	PWD_DOCKER_ABSG_MYSQL_ROOT=`sed '6q;d' pwds`
+fi
+
+
+
+
+# =====================================
 # Update and upgrade OS
 apt update 
 apt upgrade 
@@ -26,32 +68,37 @@ apt install -y \
     zsh
 
 
+# =====================================
 # Create account for sacha 
 adduser sacha
 adduser olive sudo
 adduser sacha sudo
 
 
+# =====================================
 # Install oh-my-zsh for root, olivier and sacha
 curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 chsh -s /bin/zsh
 
 
+# =====================================
 # Init firewall Iptables
 
 
+# =====================================
 # Configure ssh
 
 
+# =====================================
 # Install docker engine and compose
 apt update
 apt purge lxc-docker*
-apt install apt-transport-https ca-certificates
-pt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-===========> TODO : cp -f ./docker.list /etc/apt/sources.list.d/docker.list
+apt install -y apt-transport-https ca-certificates
+apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+mv -f ./docker.list /etc/apt/sources.list.d/docker.list
 apt update
 apt-cache policy docker-engine
-apt install docker-engine
+apt install -y docker-engine
 /etc/init.d/docker start
 groupadd docker
 apt-get upgrade docker-engine
@@ -60,10 +107,13 @@ curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
 
+# =====================================
 # Install dock : owncloud
 adduser nextcloud
 id -u nextcloud | awk '{system("sed -e ''s/__uid__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
 id -g nextcloud | awk '{system("sed -e ''s/__gid__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
+echo $PWD_DOCKER_CLOUD_MYSQL_ROOT | awk '{system("sed -e ''s/__root_pwd__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
+echo $PWD_DOCKER_CLOUD_MYSQL_USER | awk '{system("sed -e ''s/__nextcloud_pwd__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
 mkdir -p /docker/nextcloud
 mkdir -p /mnt/nextcloud/data
 mkdir -p /mnt/nextcloud/config
@@ -78,29 +128,37 @@ docker-compose up -d
 cd $old_dir
 
 
+# =====================================
 # Install dock : gitlab
 
 
 
+# =====================================
 # Install dock : AbsG 3 & 4
 
 
+
+# =====================================
 # Install sendsms
 
 
 
+# =====================================
 # Configure nginx 
 
 
 
+# =====================================
 # Configure backup
 
 
 
+# =====================================
 # Clean cache
 rm -rf /var/lib/apt/lists/*
 
 
+# =====================================
 # Bye !
 
 # Some usefull command
