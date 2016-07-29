@@ -110,10 +110,10 @@ chmod +x /usr/local/bin/docker-compose
 # =====================================
 # Install dock : owncloud
 adduser nextcloud
-id -u nextcloud | awk '{system("sed -e ''s/__uid__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
-id -g nextcloud | awk '{system("sed -e ''s/__gid__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
-echo $PWD_DOCKER_CLOUD_MYSQL_ROOT | awk '{system("sed -e ''s/__root_pwd__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
-echo $PWD_DOCKER_CLOUD_MYSQL_USER | awk '{system("sed -e ''s/__nextcloud_pwd__/"$1"/g'' docker.cloud > docker.cloud_1")}' && mv docker.cloud_1 docker.cloud
+sed -i 's/__uid__/'$(id -u)'/g' docker.cloud
+sed -i 's/__gid__/'$(id -g)'/g' docker.cloud
+sed -i 's/__root_pwd__/'$PWD_DOCKER_CLOUD_MYSQL_ROOT'/g' docker.cloud
+sed -i 's/__nextcloud_pwd__/'$PWD_DOCKER_CLOUD_MYSQL_USER'/g' docker.cloud
 mkdir -p /docker/nextcloud
 mkdir -p /mnt/nextcloud/data
 mkdir -p /mnt/nextcloud/config
