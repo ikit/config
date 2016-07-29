@@ -1,4 +1,4 @@
-#!bin/sh
+#!bin/bash
 # coding: utf-8 
 
 
@@ -11,7 +11,7 @@
 # Passwords that will be used by servers 
 # - all password that are set with "pwd" value will be generated automaticaly via random.org.
 # - you can put your own passwords if you want. You just need to replace "pwd" by your own values
-
+LINUX_ACCOUNT="boby freddy"
 PWD_DOCKER_CLOUD_MYSQL_ROOT="pwd"
 PWD_DOCKER_CLOUD_MYSQL_USER="pwd"
 PWD_DOCKER_GIT_POSTGRES_ROOT="pwd"
@@ -69,14 +69,11 @@ apt install -y \
 
 
 # =====================================
-# Create account for sacha 
-adduser sacha
-adduser olive sudo
-adduser sacha sudo
+# On met pas nos nom! T'es fou!
 
 
 # =====================================
-# Install oh-my-zsh for root, olivier and sacha
+# Install oh-my-zsh 
 curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 chsh -s /bin/zsh
 
