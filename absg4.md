@@ -3,7 +3,7 @@
 # create a container
 lxc launch images:ubuntu/xenial absg4
 # configure it
-lxc exec nextcloud -- /bin/bash
+lxc exec absg4 -- /bin/bash
 # create directory in the container
 
 mkdir -p /var/www
@@ -17,7 +17,7 @@ apt install php7.0-gd php7.0-json php7.0-mysql php7.0-curl php7.0-mbstring php7.
 git clone https://github.com/ikit/AbsG4.git
 ```
 
-## Configuring container apache server
+### Configuring container apache server
 
 ```
 nano /etc/apache2/sites-available/absg4.conf
@@ -40,13 +40,13 @@ Alias / "/var/www/AbsG4"
 </Directory>
 ```
 
-##Create symlink to enable the nextcloud site
+### Create symlink to enable the nextcloud site
 
 ```
 ln -s /etc/apache2/sites-available/absg4.conf /etc/apache2/sites-enabled/absg4.conf
 ```
 
-##Enable apache mods
+### Enable apache mods
 
 ```
 a2enmod rewrite
@@ -64,39 +64,33 @@ chown -R www-data:www-data /var/www
 mysql --user='root' --execute='CREATE DATABASE absg;'
 mysql --user='root' --execute="CREATE USER 'absg' IDENTIFIED BY 'absg';"
 mysql --user='root' --execute="GRANT ALL PRIVILEGES ON absg.* TO absg WITH GRANT OPTION;"
-sudo -u www-data php occ  maintenance:install --database "mysql" --database-name "nextcloud"  --database-user "nextcloud" --database-pass "nextcloud" --admin-user "admin" --admin-pass "..."
 
-# init database
+### init database
 mysql absg < install/create_all.sql
 
-# settings database (replace all keywords between <_>)
+### settings database (replace all keywords between <_>)
+
 ```
 nano absg/config/database.php
 nano absg/config/config.php
 ```
 
+TODO: fix apache2 config...
 
 
 
-
-
-
-
-
-
-
-
-# test that server is reachable
+### test that server is reachable
 curl 127.0.0.1
 
 
 
 
-# exit from container
+### exit from container
 exit
 
 
-# Get ip of the nextcloud container
+### Get ip of the nextcloud container
+```
 lxc list
 +---------------------+---------+-------------------+------+------------+-----------+
 |        NAME         |  STATE  |       IPV4        | IPV6 |    TYPE    | SNAPSHOTS |
@@ -104,10 +98,13 @@ lxc list
 | absg4               | RUNNING | 10.0.4.125 (eth0) |      | PERSISTENT | 0         |
 +---------------------+---------+-------------------+------+------------+-----------+
 # => by example: 10.0.4.125
+```
 
+### config nginx on the server to redirect to the container
 
-# config nginx on the server to redirect to the container
+```
 sudo nano /etc/nginx/sites-available/absg4
+```
 
 ```
 
@@ -137,6 +134,7 @@ server
 }
 ```
 
+### Enable nginx conf
 ```
 ln -s /etc/nginx/sites-available/absg4 /etc/nginx/sites-enabled/absg4
 sudo ln -s /etc/nginx/sites-available/absg4 /etc/nginx/sites-enabled/absg4
